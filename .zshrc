@@ -1,12 +1,21 @@
 # History
-HISTFILE=~/.zsh_history
-HISTSIZE=10000
-SAVEHIST=10000
 
-setopt APPEND_HISTORY
+HISTFILE=$HOME/.zsh_history
+HISTSIZE=50000
+SAVEHIST=50000
+
+# https://zsh.sourceforge.io/Doc/Release/Options.html#History
+setopt EXTENDED_HISTORY
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_DUPS
 setopt HIST_IGNORE_SPACE
+setopt HIST_FIND_NO_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_SAVE_NO_DUPS
+unsetopt HIST_VERIFY
 setopt INC_APPEND_HISTORY
-setopt SHARE_HISTORY
+unsetopt SHARE_HISTORY
 
 # mise
 whence "mise" >/dev/null && {
@@ -41,7 +50,7 @@ whence "starship" >/dev/null && {
 
 # aliases
 alias ls="ls --color=auto"
-alias rm="rm -ix"
+alias rm="rm -i"
 alias cp="cp -i"
 alias mv="mv -i"
 
