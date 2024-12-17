@@ -1,50 +1,51 @@
-# History
+# shellcheck disable=SC2148
 
-HISTFILE=$HOME/.zsh_history
+HISTFILE=~/.zsh_history
 HISTSIZE=50000
+# shellcheck disable=SC2034
 SAVEHIST=50000
 
 # https://zsh.sourceforge.io/Doc/Release/Options.html#History
 setopt EXTENDED_HISTORY
 setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_FIND_NO_DUPS
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_IGNORE_DUPS
-setopt HIST_IGNORE_SPACE
-setopt HIST_FIND_NO_DUPS
 setopt HIST_IGNORE_SPACE
 setopt HIST_SAVE_NO_DUPS
 unsetopt HIST_VERIFY
 setopt INC_APPEND_HISTORY
 unsetopt SHARE_HISTORY
 
-# mise
-whence "mise" >/dev/null && {
+# https://zsh.sourceforge.io/Doc/Release/Options.html#Changing-Directories
+setopt AUTO_PUSHD
+setopt PUSHD_IGNORE_DUPS
+
+(( ${+commands[mise]} )) && {
   eval "$(mise activate zsh)"
 }
 
-# direnv
-whence "direnv" >/dev/null && {
+(( ${+commands[direnv]} )) && {
   eval "$(direnv hook zsh)"
 }
 
-# fzf
-[ -f "${HOME}/.fzf.zsh" ] && {
-  source "${HOME}/.fzf.zsh"
+[[ -f ~/.fzf.zsh ]] && {
+# shellcheck disable=SC1090
+  source ~/.fzf.zsh
 }
 
-# Homebrew
-[ -f "/opt/homebrew/bin/brew" ] && {
+[[ -f "/opt/homebrew/bin/brew" ]] && {
   eval "$(/opt/homebrew/bin/brew shellenv)"
   
+# shellcheck disable=SC2206
   fpath=(
     "${HOMEBREW_PREFIX}/share/zsh-completions"
     "${HOMEBREW_PREFIX}/share/zsh/site-functions"
-    $fpath
+    ${fpath}
   )
 }
 
-# Starship
-whence "starship" >/dev/null && {
+(( ${+commands[starship]} )) && {
   eval "$(starship init zsh)"
 }
 

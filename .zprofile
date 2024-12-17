@@ -1,23 +1,27 @@
+# shellcheck disable=SC2148
+
 typeset -Ux path
 typeset -Ux fpath
 
+# shellcheck disable=SC2206
 path=(
-"$HOME/.local/bin"
+~/.local/bin
 
 # Krew
-"$HOME/.krew/bin"
+~/.krew/bin
 
 # use mise shims as fallback
 # see https://github.com/jdx/mise/issues/325#issuecomment-1475072742
 # and https://mise.jdx.dev/ide-integration.html
-"$HOME/.local/share/mise/shims"
+~/.local/share/mise/shims
 
-$path
+${path}
 )
 
 
+# shellcheck disable=SC2206
 fpath=(
-"$HOME/.local/share/zsh/site-functions"
+~/.local/share/zsh/site-functions
 
-$fpath
+${fpath}
 )
