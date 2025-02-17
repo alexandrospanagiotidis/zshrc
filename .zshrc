@@ -36,7 +36,7 @@ setopt PUSHD_IGNORE_DUPS
 
 [[ -f "/opt/homebrew/bin/brew" ]] && {
   eval "$(/opt/homebrew/bin/brew shellenv)"
-  
+
 # shellcheck disable=SC2206
   fpath=(
     "${HOMEBREW_PREFIX}/share/zsh-completions"
@@ -57,3 +57,7 @@ alias mv="mv -i"
 
 # call after all changes to fpath are done
 autoload -Uz compinit && compinit
+
+[[ -n "${KITTY_PID}" ]] && {
+  alias ssh="kitten ssh"
+}
