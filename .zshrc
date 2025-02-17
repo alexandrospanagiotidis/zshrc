@@ -61,3 +61,14 @@ autoload -Uz compinit && compinit
 [[ -n "${KITTY_PID}" ]] && {
   alias ssh="kitten ssh"
 }
+
+if [[ -n "${TMUX}" ]]
+then
+  bindkey '^[[1~' beginning-of-line # home
+  bindkey '^[[4~' end-of-line # end
+  bindkey '^[[1;3C' emacs-forward-word # alt left
+  bindkey '^[[1;3D' emacs-backward-word # alt right
+else
+  bindkey '^[[F' end-of-line # end
+  bindkey '^[[H' beginning-of-line # home
+fi
