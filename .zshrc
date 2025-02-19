@@ -49,14 +49,23 @@ setopt PUSHD_IGNORE_DUPS
   eval "$(starship init zsh)"
 }
 
+(( ${+commands[yazi]} )) && {
+# https://yazi-rs.github.io/docs/quick-start
+  y() {
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+    yazi "$@" --cwd-file="$tmp"
+    if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+      builtin cd -- "$cwd"
+    fi
+    rm -f -- "$tmp"
+  }
+}
+
 # aliases
 alias ls="ls --color=auto"
 alias rm="rm -i"
 alias cp="cp -i"
 alias mv="mv -i"
-
-# call after all changes to fpath are done
-autoload -Uz compinit && compinit
 
 [[ -n "${KITTY_PID}" ]] && {
   alias ssh="kitten ssh"
@@ -66,9 +75,12 @@ if [[ -n "${TMUX}" ]]
 then
   bindkey '^[[1~' beginning-of-line # home
   bindkey '^[[4~' end-of-line # end
-  bindkey '^[[1;3C' emacs-forward-word # alt left
-  bindkey '^[[1;3D' emacs-backward-word # alt right
+  bindkey '^[[1;3C' forward-word # alt left
+  bindkey '^[[1;3D' backward-word # alt right
 else
   bindkey '^[[F' end-of-line # end
   bindkey '^[[H' beginning-of-line # home
 fi
+
+# call after all changes to fpath are done
+autoload -Uz compinit && compinit
