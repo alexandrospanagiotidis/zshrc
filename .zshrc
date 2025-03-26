@@ -21,6 +21,16 @@ unsetopt SHARE_HISTORY
 setopt AUTO_PUSHD
 setopt PUSHD_IGNORE_DUPS
 
+# set by `brew shellenv` in .zprofile
+[[ -n "${HOMEBREW_PREFIX}" ]] && {
+# shellcheck disable=SC2206
+  fpath=(
+    "${HOMEBREW_PREFIX}/share/zsh-completions"
+    "${HOMEBREW_PREFIX}/share/zsh/site-functions"
+    ${fpath}
+  )
+}
+
 (( ${+commands[mise]} )) && {
   eval "$(mise activate zsh)"
 }
@@ -34,22 +44,12 @@ setopt PUSHD_IGNORE_DUPS
   source ~/.fzf.zsh
 }
 
-[[ -f "/opt/homebrew/bin/brew" ]] && {
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-
-# shellcheck disable=SC2206
-  fpath=(
-    "${HOMEBREW_PREFIX}/share/zsh-completions"
-    "${HOMEBREW_PREFIX}/share/zsh/site-functions"
-    ${fpath}
-  )
-}
-
 (( ${+commands[starship]} )) && {
   eval "$(starship init zsh)"
 }
 
 (( ${+commands[yazi]} )) && {
+# This has to be a function or the directory of the calling shell cannot be changed
 # https://yazi-rs.github.io/docs/quick-start
   y() {
     local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
@@ -82,5 +82,13 @@ else
   bindkey '^[[H' beginning-of-line # home
 fi
 
+
+# Ensure local bin and completions are first
+# shellcheck disable=SC2206
+path=(~/.local/bin ${path})
+# shellcheck disable=SC2206,SC2128
+fpath=(~/.local/share/zsh/site-functions ${fpath})
+
 # call after all changes to fpath are done
+typeset -Ux fpath
 autoload -Uz compinit && compinit

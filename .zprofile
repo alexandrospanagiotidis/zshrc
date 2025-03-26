@@ -1,13 +1,18 @@
 # shellcheck disable=SC2148
 
+# These changes could be in ~/.zshenv but /etc/zprofile on macOS prepends to
+# PATH and we want our entries to be first, so they need to be in ~/.zprofile
+
 typeset -Ux path
-typeset -Ux fpath
+
+# Add Homebrew early, so later entries have higher priority
+[[ -f "/opt/homebrew/bin/brew" ]] && {
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+}
 
 # shellcheck disable=SC2206
 path=(
 ~/.local/bin
-
-# Krew
 ~/.krew/bin
 
 # use mise shims as fallback
@@ -16,12 +21,4 @@ path=(
 ~/.local/share/mise/shims
 
 ${path}
-)
-
-
-# shellcheck disable=SC2206
-fpath=(
-~/.local/share/zsh/site-functions
-
-${fpath}
 )
