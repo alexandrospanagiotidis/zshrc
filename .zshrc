@@ -21,6 +21,10 @@ unsetopt SHARE_HISTORY
 setopt AUTO_PUSHD
 setopt PUSHD_IGNORE_DUPS
 
+# Fix tab completion issues in IntelliJ with RPROMPT, https://superuser.com/questions/655607/removing-the-useless-space-at-the-end-of-the-right-prompt-of-zsh-rprompt
+export ZLE_RPROMPT_INDENT=0
+
+
 # set by `brew shellenv` in .zprofile
 [[ -n "${HOMEBREW_PREFIX}" ]] && {
 # shellcheck disable=SC2206
@@ -61,15 +65,19 @@ setopt PUSHD_IGNORE_DUPS
   }
 }
 
+
 # aliases
+
+alias ..="cd .."
+alias ..2="cd ../.."
+alias ..3="cd ../../.."
+alias ..4="cd ../../../.."
+
 alias ls="ls --color=auto"
 alias rm="rm -i"
 alias cp="cp -i"
 alias mv="mv -i"
 
-[[ -n "${KITTY_PID}" ]] && {
-  alias ssh="kitten ssh"
-}
 
 if [[ -n "${TMUX}" ]]
 then
