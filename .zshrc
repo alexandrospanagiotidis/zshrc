@@ -79,6 +79,8 @@ alias cp="cp -i"
 alias mv="mv -i"
 
 
+# key bindings
+
 if [[ -n "${TMUX}" ]]
 then
   bindkey '^[[1~' beginning-of-line # home
@@ -100,3 +102,10 @@ fpath=(~/.local/share/zsh/site-functions ${fpath})
 # call after all changes to fpath are done
 typeset -Ux fpath
 autoload -Uz compinit && compinit
+
+
+# other environment variable
+
+export HOMEBREW_NO_ANALYTICS=1
+
+export PODMAN_COMPOSE_WARNING_LOGS=false
