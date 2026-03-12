@@ -106,6 +106,8 @@ autoload -Uz compinit && compinit
 
 # other environment variable
 
+export COLORTERM=truecolor
+
 export HOMEBREW_NO_ANALYTICS=1
 
 export PODMAN_COMPOSE_WARNING_LOGS=false
