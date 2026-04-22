@@ -1,4 +1,4 @@
-# shellcheck disable=SC2148
+# shellcheck disable=SC2148  # zsh not supported by ShellCheck
 
 HISTFILE=~/.zsh_history
 HISTSIZE=50000
@@ -21,9 +21,6 @@ unsetopt SHARE_HISTORY
 setopt AUTO_PUSHD
 setopt PUSHD_IGNORE_DUPS
 
-# Fix tab completion issues in IntelliJ with RPROMPT, https://superuser.com/questions/655607/removing-the-useless-space-at-the-end-of-the-right-prompt-of-zsh-rprompt
-export ZLE_RPROMPT_INDENT=0
-
 
 # set by `brew shellenv` in .zprofile
 [[ -n "${HOMEBREW_PREFIX}" ]] && {
@@ -37,6 +34,10 @@ export ZLE_RPROMPT_INDENT=0
 
 (( ${+commands[mise]} )) && {
   eval "$(mise activate zsh)"
+
+  # Update mise completions:
+  # - mise use -g usage
+  # - mise completion zsh > .local/share/zsh/site-functions/_mise 
 }
 
 (( ${+commands[direnv]} )) && {
@@ -56,17 +57,19 @@ export ZLE_RPROMPT_INDENT=0
 # This has to be a function or the directory of the calling shell cannot be changed
 # https://yazi-rs.github.io/docs/quick-start
   y() {
-    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+    local tmp cwd
+    tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
     yazi "$@" --cwd-file="$tmp"
     if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-      builtin cd -- "$cwd"
+      # Ignore if cd fails so we delete the temp file later anyway
+      builtin cd -- "$cwd" || true
     fi
     rm -f -- "$tmp"
   }
 }
 
 
-# aliases
+# Aliases
 
 alias ..="cd .."
 alias ..2="cd ../.."
@@ -79,7 +82,7 @@ alias cp="cp -i"
 alias mv="mv -i"
 
 
-# key bindings
+# Key Bindings
 
 if [[ -n "${TMUX}" ]]
 then
@@ -94,20 +97,18 @@ fi
 
 
 # Ensure local bin and completions are first
-# shellcheck disable=SC2206
-path=(~/.local/bin ${path})
-# shellcheck disable=SC2206,SC2128
-fpath=(~/.local/share/zsh/site-functions ${fpath})
+path=(~/.local/bin "${path[@]}")
+fpath=(~/.local/share/zsh/site-functions "${fpath[@]}")
 
-# call after all changes to fpath are done
 typeset -Ux fpath
+# Call compinit after all changes to fpath are done
 autoload -Uz compinit && compinit
 
 
-# other environment variable
+# Additional environment variables relevant for interactive sessions
 
 export COLORTERM=truecolor
-
-export HOMEBREW_NO_ANALYTICS=1
-
 export PODMAN_COMPOSE_WARNING_LOGS=false
+
+# Fix tab completion issues in IntelliJ with RPROMPT, https://superuser.com/questions/655607/removing-the-useless-space-at-the-end-of-the-right-prompt-of-zsh-rprompt
+export ZLE_RPROMPT_INDENT=0

@@ -1,6 +1,6 @@
-# shellcheck disable=SC2148
+# shellcheck disable=SC2148  # zsh not supported by ShellCheck
 
-# These changes could be in ~/.zshenv but /etc/zprofile on macOS prepends to
+# Setting PATH could be done ~/.zshenv but /etc/zprofile on macOS prepends to
 # PATH and we want our entries to be first, so they need to be in ~/.zprofile
 
 typeset -Ux path
@@ -10,8 +10,7 @@ typeset -Ux path
   eval "$(/opt/homebrew/bin/brew shellenv)"
 }
 
-# shellcheck disable=SC2206
-path=(
+__extra_paths=(
 ~/.local/bin
 ~/.krew/bin
 
@@ -19,6 +18,19 @@ path=(
 # see https://github.com/jdx/mise/issues/325#issuecomment-1475072742
 # and https://mise.jdx.dev/ide-integration.html
 ~/.local/share/mise/shims
-
-${path}
 )
+
+# Prepend only existing directories in-order, following symlinks
+# shellcheck disable=SC2296,SC1036  # ignore zsh-specific syntax
+path=(
+"${^__extra_paths[@]}"(N-/)
+"${path[@]}"
+)
+
+unset __extra_paths
+
+# Additional environment variables
+
+export DO_NOT_TRACK=true
+export GH_TELEMETRY=false
+export HOMEBREW_NO_ANALYTICS=1
