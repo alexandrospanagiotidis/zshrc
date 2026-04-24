@@ -5,14 +5,10 @@
 
 typeset -Ux path
 
-# Add Homebrew early, so later entries have higher priority
-[[ -f "/opt/homebrew/bin/brew" ]] && {
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-}
-
 __extra_paths=(
 ~/.local/bin
 ~/.krew/bin
+/opt/nanobrew/prefix/bin
 
 # use mise shims as fallback
 # see https://github.com/jdx/mise/issues/325#issuecomment-1475072742
@@ -33,4 +29,3 @@ unset __extra_paths
 
 export DO_NOT_TRACK=true
 export GH_TELEMETRY=false
-export HOMEBREW_NO_ANALYTICS=1

@@ -1,5 +1,7 @@
 # shellcheck disable=SC2148  # zsh not supported by ShellCheck
 
+# zsh configuration
+
 HISTFILE=~/.zsh_history
 HISTSIZE=50000
 # shellcheck disable=SC2034
@@ -22,22 +24,10 @@ setopt AUTO_PUSHD
 setopt PUSHD_IGNORE_DUPS
 
 
-# set by `brew shellenv` in .zprofile
-[[ -n "${HOMEBREW_PREFIX}" ]] && {
-# shellcheck disable=SC2206
-  fpath=(
-    "${HOMEBREW_PREFIX}/share/zsh-completions"
-    "${HOMEBREW_PREFIX}/share/zsh/site-functions"
-    ${fpath}
-  )
-}
+# Activate hooks, prompts, etc.
 
 (( ${+commands[mise]} )) && {
   eval "$(mise activate zsh)"
-
-  # Update mise completions:
-  # - mise use -g usage
-  # - mise completion zsh > .local/share/zsh/site-functions/_mise 
 }
 
 (( ${+commands[direnv]} )) && {
@@ -52,6 +42,9 @@ setopt PUSHD_IGNORE_DUPS
 (( ${+commands[starship]} )) && {
   eval "$(starship init zsh)"
 }
+
+
+# Functions
 
 (( ${+commands[yazi]} )) && {
 # This has to be a function or the directory of the calling shell cannot be changed
@@ -97,8 +90,16 @@ fi
 
 
 # Ensure local bin and completions are first
-path=(~/.local/bin "${path[@]}")
-fpath=(~/.local/share/zsh/site-functions "${fpath[@]}")
+path=(
+~/.local/bin
+"${path[@]}"
+)
+
+fpath=(
+~/.local/share/zsh/site-functions
+/opt/nanobrew/prefix/share/zsh/site-functions
+"${fpath[@]}"
+)
 
 typeset -Ux fpath
 # Call compinit after all changes to fpath are done
