@@ -27,20 +27,19 @@ setopt PUSHD_IGNORE_DUPS
 # Activate hooks, prompts, etc.
 
 (( ${+commands[mise]} )) && {
-  eval "$(mise activate zsh)"
+  source <(mise activate zsh)
 }
 
 (( ${+commands[direnv]} )) && {
-  eval "$(direnv hook zsh)"
+  source <(direnv hook zsh)
 }
 
-[[ -f ~/.fzf.zsh ]] && {
-# shellcheck disable=SC1090
-  source ~/.fzf.zsh
+(( ${+commands[fzf]} )) && {
+  source <(fzf --zsh)
 }
 
 (( ${+commands[starship]} )) && {
-  eval "$(starship init zsh)"
+  source <(starship init zsh)
 }
 
 
